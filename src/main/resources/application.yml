@@ -1,0 +1,35 @@
+server:
+  port: ${PORT}
+spring:
+  datasource:
+    dataSourceClassName: org.postgresql.ds.PGSimpleDataSource
+    url:
+    databaseName: ${DB_NAME}
+    serverName: ${DB_SERVER}
+    username: ${PG_USER}
+    password: ${PG_PASSWORD}
+    max-active: ${MAX_DB_CONNECTION_POOL_SIZE}
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database: POSTGRESQL
+    openInView: false
+    show_sql: false
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+      naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
+    properties:
+      hibernate.cache.use_second_level_cache: false
+
+app:
+  serverName: ${SERVER_NAME}
+  environment: ${ENVIRONMENT}
+  s3:
+    accessKey: ${S3_ACCESS_KEY}
+    secretKey: ${S3_SECRET_KEY}
+    region: ${S3_REGION}
+    clusterBucketName: ${S3_CLUSTER_BUCKET}
+    microServiceBucketName: ${S3_MICROSERVICE_BUCKET}
+
+

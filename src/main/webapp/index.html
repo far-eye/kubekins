@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Micro-Service Manager</title>
+</head>
+
+<body ng-app="microServiceManagerApp" ng-controller="IndexController">
+
+
+
+<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="assets/css/custom-select.css">
+<link rel="stylesheet" href="assets/font-awesome-4.7.0/css/font-awesome.min.css">
+<script src="version.js"></script>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/angular.min.js"></script>
+<script src="assets/js/angular-ui-router.min.js"></script>
+<script src="assets/js/angular-animate.min.js"></script>
+<script src="assets/js/angular-resource.js"></script>
+<script src="assets/js/angular-strap.min.js"></script>
+<script src="assets/js/angular-strap.tpl.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/custom-select.js"></script>
+
+<!--Project Scripts-->
+<script src="scripts/app.js"></script>
+<script src="scripts/core/main_routes.js"></script>
+<script src="scripts/core/controllers/main_controller.js"></script>
+<script src="scripts/core/controllers/index_controller.js"></script>
+<script src="assets/js/dirPagination.js"></script>
+
+<script src="scripts/core/utils/constants.js"></script>
+<script src="scripts/core/utils/checklist-model.js"></script>
+
+
+
+<script src="scripts/cluster/controllers/cluster_controller.js"></script>
+<script src="scripts/cluster/services/cluster_service.js"></script>
+<script src="scripts/cluster/cluster_routes.js"></script>
+
+<script src="scripts/micro-service/controllers/micro_service_controller.js"></script>
+<script src="scripts/micro-service/controllers/micro_service_environment_controller.js"></script>
+<script src="scripts/micro-service/services/micro_service_services.js"></script>
+<script src="scripts/micro-service/micro_service_routes.js"></script>
+<div class="container-fluid" ui-view style="margin-top: 80px"></div>
+
+<div class="loader-wrapper" ng-show="showLoader"  style="z-index:10000000">
+    <div class="loader" id="loader-6">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</div>
+
+</body>
+</html>
+

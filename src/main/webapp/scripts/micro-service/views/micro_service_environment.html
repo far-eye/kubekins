@@ -1,0 +1,499 @@
+<div class="row">
+    <div class="form-group col-sm-2" >
+        <button class="btn btn-primary" data-toggle="modal" data-target="#saveEnvironmentModal"
+                ng-click="clear(); setFlags(false,false,false)">
+            <span class="glyphicon glyphicon-plus"></span> Add Environment
+        </button>
+    </div>
+
+    <div class="form-group">
+        <button class="btn btn-primary"
+                ng-click="refresh()">
+            <i class="fa fa-refresh" aria-hidden="true"></i> Refresh
+        </button>
+    </div>
+
+    <div class="col-sm-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+                <thead>
+                <tr>
+                    <th>#</th>
+
+                    <th ng-click="sortOn('name')" >Name
+                        <i ng-if="pageDetails.sortOn=='name' && pageDetails.sortType=='ASC'"
+                           style="float: right;"
+                           class="fa fa-sort-up"></i>
+                        <i ng-if="pageDetails.sortOn=='name' && pageDetails.sortType=='DESC'"
+                           style="float: right;"
+                           class="fa fa-sort-down"></i>
+                    </th>
+                    <th ng-click="sortOn('code')" >Code
+                        <i ng-if="pageDetails.sortOn=='code' && pageDetails.sortType=='ASC'"
+                           style="float: right;"
+                           class="fa fa-sort-up"></i>
+                        <i ng-if="pageDetails.sortOn=='code' && pageDetails.sortType=='DESC'"
+                           style="float: right;"
+                           class="fa fa-sort-down"></i>
+                    </th>
+
+                    <th>Version</th>
+                    <th>Old Version</th>
+                    <th>Status</th>
+                    <th>Creation Date</th>
+                    <th>Last Modified Date</th>
+                    <th>URL</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-if="noContentRow" style="height: 30px;">
+                    <td colspan="10" align="center">No environments found...</td>
+                </tr>
+                <tr dir-paginate="environment in environmentList.content | itemsPerPage: environmentList.size "
+                    total-items="environmentList.totalElements">
+                    <td>{{(pageSize * pageNumber)+$index+1}}</td>
+                    <td>{{environment.name}}</td>
+                    <td>{{environment.code}}</td>
+                    <td>{{environment.version}}</td>
+                    <td>{{environment.oldVersion}}</td>
+                    <td>{{environment.status}} <i ng-show="environment.status==STATUS_CONSTANTS.failed || environment.status==STATUS_CONSTANTS.updateFailed" class="fa fa-info-circle " style="z-index=100;" data-container="body" data-toggle="tooltip" data-placement="right" title="{{environment.logs}}" aria-describedby="popover646960"></i>
+                    </td>
+                    <td>{{environment.creationDate  | date : "hh:mm a ,dd MMM yyyy"}}</td>
+                    <td>{{environment.lastModifiedDate  | date : "hh:mm a ,dd MMM yyyy"}}</td>
+                    <td><a target="_blank" href="https://{{environment.code}}.{{clusterMap[environment.clusterid].domainName}}">{{environment.code}}.{{clusterMap[environment.clusterid].domainName}}</td>
+                    <td>
+                        <button type="button" ng-click="setFlags(true,false);edit(environment.id,true)" class="btn btn-default"
+                                title="Edit">
+                            <span class="glyphicon glyphicon-pencil"></span> Edit
+                        </button>
+                        <button type="button" ng-show="environment.status==STATUS_CONSTANTS.failed" ng-click="setFlags(false,true);edit(environment.id,false)" class="btn btn-default"
+                                title="Retry">
+                            <span class="fa fa-undo"></span> Retry
+                        </button>
+                        <!--<button type="button" ng-show="environment.status=='update-failed'" ng-click="setFlags(true,false);edit(environment.id,false)" class="btn btn-default"-->
+                        <!--title="Retry">-->
+                        <!--<span class="fa fa-undo"></span> Retry Update-->
+                        <!--</button>-->
+                        <button type="button"  ng-if="(environment.status==STATUS_CONSTANTS.updateFailed || environment.status==STATUS_CONSTANTS.success)" ng-click="deleteStub(deleteEnv,environment.code)" class="btn btn-default"
+                                title="Retry">
+                            <span class="fa fa-trash"></span> Delete
+                        </button>
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-5">
+                <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"
+                                         template-url="scripts/core/views/dirPagination.tpl.html">
+
+                </dir-pagination-controls>
+            </div>
+            <div class="col-sm-3 " ng-show="environmentList.totalPages>1">
+                <strong>Showing {{(pageSize * pageNumber)+$index+1}} - {{(pageSize * pageNumber)+$index+records}}
+                    of {{totalRecords}} records</strong>
+            </div>
+            <div class="col-md-4 text-right " ng-show="environmentList.totalPages>1">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label for="page-size-input1" class="control-label ">Records per page </label>
+                        <select id="page-size-input1" name="pageSize" ng-model="pageSize"
+                                ng-change="setPageSize(pageSize)"
+                                class="form-control ">
+                            <option ng-selected="pageSize==10" value="10">10</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="250">250</option>
+                            <option value="500">500</option>
+                            <option value="1000">1000</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal fade" id="saveEnvironmentModal" tabindex="-1" role="dialog" aria-labelledby="environmentLabel"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false" >
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form name="saveEnvironmentModalForm" role="form" novalidate
+                  class="form-horizontal ng-scope ng-invalid ng-invalid-required ng-dirty ng-valid-minlength"
+            >
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                            ng-click="clear()">&times;</button>
+                    <h4 class="modal-title" id="environmentLabel">Create or edit Environment</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="col-sm-6">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">Environment Name</label>
+                            <div class="">
+                                <input type="text" class="form-control" name="environmentName"
+                                       ng-model="environment.name" ng-minlength=1 ng-maxlength=512 required >
+
+                                <div class=""
+                                     ng-show="saveEnvironmentModalForm.environmentName.$dirty && saveEnvironmentModalForm.environmentName.$invalid">
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;" ng-show="saveEnvironmentModalForm.environmentName.$error.required">
+                                        Environment Name is required.
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;" ng-show="saveEnvironmentModalForm.environmentName.$error.minlength">
+                                        Environment Name is required to be at least 1 character
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;" ng-show="saveEnvironmentModalForm.environmentName.$error.maxlength">
+                                        Environment Name cannot be longer than 512 characters
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">Code</label>
+                            <div class="">
+                                <input type="text" class="form-control" name="environmentCode" id="environmentCode"
+                                       ng-model="environment.code" required ng-minlength=1 ng-maxlength=16 ng-readonly="readOnly">
+
+                                <div class=""
+                                     ng-show="saveEnvironmentModalForm.environmentCode.$dirty && saveEnvironmentModalForm.environmentCode.$invalid">
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;" ng-show="saveEnvironmentModalForm.environmentName.$error.required">
+                                        Environment Code is required.
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;" ng-show="saveEnvironmentModalForm.environmentCode.$error.minlength">
+                                        Environment Code is required to be at least 1 character
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;" ng-show="saveEnvironmentModalForm.environmentCode.$error.maxlength">
+                                        Environment Code cannot be longer than 8 characters
+                                    </small>
+                                </div>
+                                <small class="alert alert-danger" style="position: absolute;z-index: 999;" ng-if="specialCharError">
+                                    Environment Code cannot contain special characters
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-sm-6">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">Version:</label>
+                            <div class="">
+                                <select class="form-control" name="repeatSelect" id="repeatSelect" ng-model="environment.version" ng-change="getEnvironmentVariables();">
+                                    <option ng-repeat="version in allVersions" value="{{version}}">{{version}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">Deployment Cluster:</label>
+                            <div class="">
+                                <select class="form-control" name="clusterSelect" id="clusterSelect" ng-model="environment.clusterid" required>
+                                    <option ng-repeat="cluster in clusterList" value="{{cluster.id}}" ng-selected="environment.clusterid == cluster.id">{{cluster.clustername}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">Enable New Relic?</label>
+
+                            <div class="">
+
+                                <label class="radio-inline">
+                                    <input  name="enableNewRelic" ng-model="environment.enableNewRelic" ng-value="true" type="radio" required>
+                                    Yes
+                                </label>
+                                <label class="radio-inline">
+                                    <input  name="enableNewRelic" ng-model="environment.enableNewRelic" ng-value="false" checked="checked" required type="radio">
+                                    No
+                                </label>
+                                <div class=""
+                                     ng-show="saveEnvironmentModalForm.enableNewRelic.$dirty && saveEnvironmentModalForm.enableNewRelic.$invalid">
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveEnvironmentModalForm.enableNewRelic.$error.required">
+                                        This is required.
+                                    </small>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">Node Affinity(Run Only On Dedicated?) </label>
+
+                            <div class="">
+
+                                <label class="radio-inline">
+                                    <input  name="nodeAffinity" ng-model="environment.nodeAffinity" ng-value="'true'"  checked="checked" type="radio">
+                                    Dedicated
+                                </label>
+                                <label class="radio-inline">
+                                    <input  name="nodeAffinity" ng-model="environment.nodeAffinity" ng-value="'false'"  type="radio">
+                                    Spot
+                                </label>
+                                <label class="radio-inline">
+                                    <input  name="nodeAffinity" ng-model="environment.nodeAffinity" ng-value="'none'"  type="radio">
+                                    Both
+                                </label>
+                                <div class=""
+                                     ng-show="saveEnvironmentModalForm.nodeAffinity.$dirty && saveEnvironmentModalForm.nodeAffinity.$invalid">
+                                    &lt;!&ndash; <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                                        div          ng-show="saveEnvironmentModalForm.nodeAffinity.$error.required">
+                                    This is required.
+                                </small>&ndash;&gt;
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">Keep data after deletion of environment?</label>
+
+                            <div class="">
+
+                                <label class="radio-inline">
+                                    <input  name="keepEnvironmentDataAfterDeletion" ng-disabled="readOnly" ng-model="environment.keepEnvironmentDataAfterDeletion" ng-value="true" checked="" type="radio" required>
+                                    Keep
+                                </label>
+                                <label class="radio-inline">
+                                    <input  name="keepEnvironmentDataAfterDeletion" ng-disabled="readOnly" ng-model="environment.keepEnvironmentDataAfterDeletion" ng-value="false" required type="radio">
+                                    Delete
+                                </label>
+                                <div class=""
+                                     ng-show="saveEnvironmentModalForm.keepEnvironmentDataAfterDeletion.$dirty && saveEnvironmentModalForm.keepEnvironmentDataAfterDeletion.$invalid">
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveEnvironmentModalForm.keepEnvironmentDataAfterDeletion.$error.required">
+                                        This is required.
+                                    </small>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">Autoscale:</label>
+
+                            <div class="">
+
+                                <label class="radio-inline">
+                                    <input  name="autoscale" ng-model="environment.autoscale" ng-value="true" checked="" type="radio" required>
+                                    Activated
+                                </label>
+                                <label class="radio-inline">
+                                    <input  name="autoscale" ng-model="environment.autoscale" ng-value="false" required type="radio">
+                                    Not Activated
+                                </label>
+                                <div class=""
+                                     ng-show="saveEnvironmentModalForm.autoscale.$dirty && saveEnvironmentModalForm.autoscale.$invalid">
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveEnvironmentModalForm.autoscale.$error.required">
+                                        This is required.
+                                    </small>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6" ng-if="!environment.autoscale">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">Target Instances:</label>
+                            <div class="">
+                                <input type="number" class="form-control" name="targetPods"
+                                       ng-model="environment.targetPods" required ng-min="1" ng-max="5">
+
+                                <div class=""
+                                     ng-show="saveEnvironmentModalForm.targetPods.$dirty && saveEnvironmentModalForm.targetPods.$invalid">
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveEnvironmentModalForm.targetPods.$error.required">
+                                        Target Instances is required.
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveEnvironmentModalForm.targetPods.$error.pattern">
+                                        Target Instances must be a number.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6" ng-if="environment.autoscale">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">Minimum Instances:</label>
+                            <div class="">
+                                <input type="number" class="form-control" name="minimumPods"
+                                       ng-model="environment.minimumPods" required ng-min="1" ng-max="5">
+
+                                <div class=""
+                                     ng-show="saveEnvironmentModalForm.minimumPods.$dirty && saveEnvironmentModalForm.minimumPods.$invalid">
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveEnvironmentModalForm.minimumPods.$error.required">
+                                        Minimum Instances is required.
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveEnvironmentModalForm.minimumPods.$error.pattern">
+                                        Minimum Instances must be a number.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6" ng-if="environment.autoscale">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">Maximum Instances:</label>
+                            <div class="">
+                                <input type="number" class="form-control" name="maximumPods"
+                                       ng-model="environment.maximumPods" required ng-min="1" ng-max="5">
+
+                                <div class=""
+                                     ng-show="saveEnvironmentModalForm.maximumPods.$dirty && saveEnvironmentModalForm.maximumPods.$invalid">
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveEnvironmentModalForm.maximumPods.$error.required">
+                                        Maximum Instances is required.
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveEnvironmentModalForm.maximumPods.$error.pattern">
+                                        Maximum Instances Must be a number.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6" ng-if="environment.autoscale">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">CPU Utilization:</label>
+                            <div class="">
+                                <input type="number" class="form-control" name="cpuUtilization"
+                                       ng-model="environment.cpuUtilization" required ng-min="1" ng-max="100">
+
+                                <div class=""
+                                     ng-show="saveEnvironmentModalForm.cpuUtilization.$dirty && saveEnvironmentModalForm.cpuUtilization.$invalid">
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveEnvironmentModalForm.cpuUtilization.$error.required">
+                                        CPU Utilization is required.
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveEnvironmentModalForm.cpuUtilization.$error.pattern">
+                                        CPU Utilization Must be a number.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6" >
+                        <div class="form-group" style="padding: 25px 10px 0px 10px;">
+                            <button ng-disabled="!environment.version" class="btn btn-primary"
+                                    ng-click="getEnvironmentVariables();"  data-toggle="modal" data-target="#environmentVariableModal">
+                                <span class="glyphicon glyphicon-plus"></span> Change Environment Variables
+                            </button>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+                            <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                        </button>
+                        <button type="submit" ng-disabled="saveEnvironmentModalForm.$invalid" class="btn btn-primary" ng-click="create()">
+                            <span class="glyphicon glyphicon-save"></span> Save
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="environmentVariableModal" tabindex="-2" role="dialog" aria-labelledby="environmentVariableModal"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form name="environmentVariableModalForm" role="form" novalidate
+                  class="form-horizontal ng-scope nginvalid ng-invalid-required ng-dirty ng-valid-minlength"
+            >
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                            >&times;</button>
+                    <h4 class="modal-title" id="environmentVariableLabel">Create or edit Environment Variables</h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="col-sm-8"  ng-repeat="(key,value) in environmentVariableListMap">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">{{key}}</label>
+                            <div class="">
+                                <input type="text" class="form-control" name="environmentName" placeholder="{{value}}"
+                                       ng-model="environmentVariableListMap[key]" required >
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="clearfix"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                        </button>
+                        <button type="submit" ng-disabled="(environmentVariableModalForm.$invalid || isDisabledClick)" class="btn btn-primary" ng-click="saveEnvironmentVariableList()" >
+                            <span class="glyphicon glyphicon-ok"></span> OK
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="deploymentStepsModal" tabindex="-2" role="dialog" aria-labelledby="deploymentStepsModal"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                >&times;</button>
+                <h4 class="modal-title">Deployment Steps</h4>
+            </div>
+
+            <div class="modal-body" >
+
+                <div class="col-sm-12">
+                    <div class="form-group" >
+                        <div  ng-repeat="release in deploymentSteps">{{release}}</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                </button>
+                <button type="submit"  class="btn btn-primary" ng-click="create()">
+                    <span class="glyphicon glyphicon-save"></span> Deploy
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

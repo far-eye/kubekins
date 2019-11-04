@@ -1,0 +1,671 @@
+<style>
+    @keyframes grow{
+        0%, 100%{
+        -webkit-transform: scaleY(1);
+        -ms-transform: scaleY(1);
+        -o-transform: scaleY(1);
+        transform: scaleY(1);
+        }
+        50%{
+        -webkit-transform: scaleY(1.8);
+        -ms-transform: scaleY(1.8);
+        -o-transform: scaleY(1.8);
+        transform: scaleY(1.8);
+        }
+    }
+    .loader-wrapper {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.9);
+    }
+    #loader-6{
+        top: 50%;
+        position: absolute;
+        left: 50%;
+    }
+    #loader-6 span{
+      display: inline-block;
+      width: 5px;
+      height: 20px;
+      background-color: #3498db;
+    }
+    #loader-6 span:nth-child(1){
+      animation: grow 1s ease-in-out infinite;
+    }
+    #loader-6 span:nth-child(2){
+      animation: grow 1s ease-in-out 0.15s infinite;
+    }
+    #loader-6 span:nth-child(3){
+      animation: grow 1s ease-in-out 0.30s infinite;
+    }
+    #loader-6 span:nth-child(4){
+      animation: grow 1s ease-in-out 0.45s infinite;
+    }
+    .navbar-default .navbar-collapse{
+        padding: 0 10px;
+        background: #34363c;
+    }
+    .navbar-default .navbar-nav>li>a {
+        color: white;
+        box-shadow: none !important;
+    }
+    .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
+        background: #2486ff;
+        color: #ffffff;
+    }
+    .navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover {
+        color: #fff;
+        background-color: transparent;
+        background: #2486ff;
+    }
+
+</style>
+<style>
+
+#slider {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    top : 50px;
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+}
+
+.slide-in {
+    animation: slide-in 0.5s forwards;
+    -webkit-animation: slide-in 0.5s forwards;
+}
+}
+
+</style>
+
+<style>
+
+    body, html {
+        background: #f7f7f7;
+        height: 100%;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 50px;
+        bottom: 0;
+        width: 300px;
+        background: #fff;
+    }
+    .top-nav {
+        margin-bottom: 0px !important;
+    }
+    .container-fluid {
+        margin-top: 65px !important;
+    }
+    .wrapper {
+        margin: 0px 15px 15px 315px;
+        padding: 10px;
+        background: white;
+        border: 1px solid #d3d3d3;
+        box-shadow: 0 2px 2px #d3d3d3;
+        float: left;
+        width: calc(100% - 330px);
+    }
+    .btn-container {
+        padding: 10px;
+    }
+    .sidebar {
+        border-right: 1px solid #d8d8d8;
+    }
+    .sidenav {
+        margin-top: 15px;
+        margin-top: 15px;
+        height: calc(100% - 70px);
+        overflow-y: auto;
+    }
+    .sidenav ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .sidenav ul li a{
+        text-decoration: none;
+        text-transform: capitalize;
+        padding: 10px 12px;
+        font-size: 14px;
+        display: block;
+        width: 100%;
+        border-bottom: 1px solid #ececec;
+    }
+
+    .sidenav ul li a:hover, .sidenav ul li a.active{
+        background: #2486ff;
+        color: white;
+        border-right: 3px solid #2486ff;
+    }
+    .alert {
+        position: fixed;
+        right: 10px;
+        z-index: 9999999;
+        top: 65px;
+    }
+    small.alert {
+        position: absolute;
+        z-index: 999;
+        padding: 0px;
+        border-radius: 3px;
+        background: transparent;
+        border: none;
+    }
+
+.col-md-7, .controlInput {
+    width: 58.33333%;
+}
+.text-left, .controlInput {
+  text-align: left;
+}
+.mh500 {
+  min-height: 500px;
+}
+
+.controlLabel {
+  font-size: 13px;
+}
+
+
+.m0 {
+  margin: 0px;
+}
+
+
+.mb0, #strengthBar {
+  margin-bottom: 0px;
+}
+
+
+.mt0 {
+  margin-top: 0px;
+}
+
+
+.ml0 {
+  margin-left: 0px;
+}
+
+
+.mr0 {
+  margin-right: 0px;
+}
+
+
+.p0 {
+  padding: 0px;
+}
+
+
+.pb0 {
+  padding-bottom: 0px;
+}
+
+
+.pt0 {
+  padding-top: 0px;
+}
+
+
+.pl0 {
+  padding-left: 0px;
+}
+
+
+.pr0 {
+  padding-right: 0px;
+}
+
+
+.m5 {
+  margin: 5px;
+}
+
+
+.mb5 {
+  margin-bottom: 5px;
+}
+
+
+.mt5 {
+  margin-top: 5px;
+}
+
+
+.ml5 {
+  margin-left: 5px;
+}
+
+
+.mr5 {
+  margin-right: 5px;
+}
+
+
+.p5 {
+  padding: 5px;
+}
+
+
+.pb5 {
+  padding-bottom: 5px;
+}
+
+
+.pt5 {
+  padding-top: 5px;
+}
+
+
+.pl5 {
+  padding-left: 5px;
+}
+
+
+.pr5 {
+  padding-right: 5px;
+}
+
+
+.m10 {
+  margin: 10px;
+}
+
+
+.mb10 {
+  margin-bottom: 10px;
+}
+
+
+.mt10 {
+  margin-top: 10px;
+}
+
+
+.ml10 {
+  margin-left: 10px;
+}
+
+
+.mr10 {
+  margin-right: 10px;
+}
+
+
+.p10 {
+  padding: 10px;
+}
+
+
+.pb10 {
+  padding-bottom: 10px;
+}
+
+
+.pt10 {
+  padding-top: 10px;
+}
+
+
+.pl10 {
+  padding-left: 10px;
+}
+
+
+.pr10 {
+  padding-right: 10px;
+}
+
+
+.m15 {
+  margin: 15px;
+}
+
+
+.mb15 {
+  margin-bottom: 15px;
+}
+
+
+.mt15 {
+  margin-top: 15px;
+}
+
+
+.ml15 {
+  margin-left: 15px;
+}
+
+
+.mr15 {
+  margin-right: 15px;
+}
+
+
+.p15 {
+  padding: 15px;
+}
+
+
+.pb15 {
+  padding-bottom: 15px;
+}
+
+
+.pt15 {
+  padding-top: 15px;
+}
+
+
+.pl15, #strengthBar {
+  padding-left: 15px;
+}
+
+
+.pr15 {
+  padding-right: 15px;
+}
+
+
+.m25 {
+  margin: 25px;
+}
+
+
+.mb25 {
+  margin-bottom: 25px;
+}
+
+
+.mt25 {
+  margin-top: 25px;
+}
+
+
+.ml25 {
+  margin-left: 25px;
+}
+
+
+.mr25 {
+  margin-right: 25px;
+}
+
+
+.p25 {
+  padding: 25px;
+}
+
+
+.pb25 {
+  padding-bottom: 25px;
+}
+
+
+.pt25 {
+  padding-top: 25px;
+}
+
+
+.pl25 {
+  padding-left: 25px;
+}
+
+
+.pr25 {
+  padding-right: 25px;
+}
+
+
+.m30 {
+  margin: 30px;
+}
+
+
+.mb30 {
+  margin-bottom: 30px;
+}
+
+
+.mt30 {
+  margin-top: 30px;
+}
+
+
+.ml30 {
+  margin-left: 30px;
+}
+
+
+.mr30 {
+  margin-right: 30px;
+}
+
+
+.p30 {
+  padding: 30px;
+}
+
+
+.pb30 {
+  padding-bottom: 30px;
+}
+
+
+.pt30 {
+  padding-top: 30px;
+}
+
+
+.pl30 {
+  padding-left: 30px;
+}
+
+
+.pr30 {
+  padding-right: 30px;
+}
+
+
+.m50 {
+  margin: 50px;
+}
+
+
+.mb50 {
+  margin-bottom: 50px;
+}
+
+
+.mt50 {
+  margin-top: 50px;
+}
+
+
+.ml50 {
+  margin-left: 50px;
+}
+
+
+.mr50 {
+  margin-right: 50px;
+}
+
+
+.p50 {
+  padding: 50px;
+}
+
+
+.pb50 {
+  padding-bottom: 50px;
+}
+
+
+.pt50 {
+  padding-top: 50px;
+}
+
+
+.pl50 {
+  padding-left: 50px;
+}
+
+
+.pr50 {
+  padding-right: 50px;
+}
+.chip {
+  background: #f3f3f3;
+  display: inline-block;
+  border: 1px solid #d5d5d5;
+  border-radius: 3px;
+  color: #000;
+  font-size: 11px;
+  padding: 2px 18px 2px 5px;
+  position: relative;
+  margin-top: 7px;
+  margin-right: 5px;
+}
+.chip .close-chip {
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: rgba(255, 2, 0, 0.28);
+  color: #d90100;
+  padding: 2px;
+  cursor: pointer;
+}
+.chip-clear-all {
+  padding: 2px 5px 2px 5px;
+  cursor: pointer;
+  background: rgba(255, 2, 0, 0.22);
+  border: 1px solid rgba(255, 0, 0, 0.46);
+  color: #cf0100;
+}
+
+
+    .text-header {
+        padding: 0px 10px;
+        border-bottom: 1px solid #c7c7c7;
+        color: #5d5d5d;
+        font-size: 12px;
+    }
+    .icon-addon {
+        position: relative;
+        color: #555;
+        display: block;
+    }
+
+    .icon-addon:after,
+    .icon-addon:before {
+        display: table;
+        content: " ";
+    }
+
+    .icon-addon:after {
+        clear: both;
+    }
+
+    .icon-addon.addon-md .glyphicon,
+    .icon-addon .glyphicon,
+    .icon-addon.addon-md .fa,
+    .icon-addon .fa {
+        position: absolute;
+        z-index: 2;
+        left: 10px;
+        font-size: 14px;
+        width: 20px;
+        margin-left: -2.5px;
+        text-align: center;
+        padding: 10px 0;
+        top: 1px
+    }
+
+    .icon-addon.addon-md .form-control,
+    .icon-addon .form-control {
+        padding-left: 30px;
+        float: left;
+        font-weight: normal;
+    }
+    .bg-white {
+        background: white;
+    }
+</style>
+
+<nav class="top-nav navbar navbar-default navbar-fixed-top">
+    <div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-left">
+
+                <li  ui-sref-active="active" >
+                    <a ui-sref="cluster">
+                        <span>Cluster Manager</span>
+                    </a>
+                </li>
+
+
+                <li  ui-sref-active="active">
+                    <a ui-sref="microService">
+                        <span>Micro-service Manager</span>
+                    </a>
+                </li>
+            </ul>
+
+
+
+        </div>
+    </div>
+</nav>
+
+
+<div ui-view></div>
+
+<div class="alert " ng-class="{'alert-success' : success, 'alert-danger':error}" ng-if="(success || error)">
+
+    <a href="" class="close"  data-dismiss="alert"  ng-click="closeAlert();">&times;</a>
+    <div class="text-left">
+        <i class="fa fa-info-circle"></i>
+        {{message}}
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModal"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                >&times;</button>
+                <h4 class="modal-title" id="delete">Delete</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-sm-6">
+                    <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                        <label class="control-label">Are you sure you want to delete this?</label>
+
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" data-dismiss="modal" ng-click="clearConnector()">
+                        <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                    </button>
+                    <button type="submit"  class="btn btn-danger" ng-click="delete()">
+                        <span class="fa fa-trash"></span> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

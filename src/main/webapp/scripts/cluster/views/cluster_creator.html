@@ -1,0 +1,329 @@
+<style>
+
+#slider {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    top : 50px;
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+}
+
+.slide-in {
+    animation: slide-in 0.5s forwards;
+    -webkit-animation: slide-in 0.5s forwards;
+}
+}
+
+
+
+</style>
+
+
+<!-- Main content -->
+<div class="container bg-white">
+    <div class="row mt15 pb15">
+        <section class="content">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="form-group col-sm-2">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#saveClusterModal"
+                                ng-click="clearCluster(); setFlags(false,false,false)">
+                            <span class="glyphicon glyphicon-plus"></span> Add Cluster
+                        </button>
+                    </div>
+
+                    <div class="form-group col-sm-2">
+                        <button class="btn btn-primary"
+                                ng-click="refresh()">
+                            <i class="fa fa-refresh" aria-hidden="true"></i> Refresh
+                        </button>
+                    </div>
+                    <div class="col-sm-6"></div>
+                    <div class="form-group col-sm-2">
+                        <input class="form-control mr15" type='text' ng-model='searchText' placeholder="Search"/>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+
+                                    <th ng-click="sortOn('name')">Cluster Name
+                                        <i ng-if="pageDetails.sortOn=='name' && pageDetails.sortType=='ASC'"
+                                           style="float: right;"
+                                           class="fa fa-sort-up"></i>
+                                        <i ng-if="pageDetails.sortOn=='name' && pageDetails.sortType=='DESC'"
+                                           style="float: right;"
+                                           class="fa fa-sort-down"></i>
+                                    </th>
+                                    <th ng-click="sortOn('code')">Project ID
+                                        <i ng-if="pageDetails.sortOn=='code' && pageDetails.sortType=='ASC'"
+                                           style="float: right;"
+                                           class="fa fa-sort-up"></i>
+                                        <i ng-if="pageDetails.sortOn=='code' && pageDetails.sortType=='DESC'"
+                                           style="float: right;"
+                                           class="fa fa-sort-down"></i>
+                                    </th>
+
+                                    <th>Region</th>
+                                    <th>Creation Date</th>
+                                    <th>Created By</th>
+                                    <th>Action</th>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-if="noClusters" style="height: 30px;">
+                                    <td colspan="7" align="center">No clusters found...</td>
+                                </tr>
+                                <tr dir-paginate="cluster in clusterList | itemsPerPage: clusterList.size | filter:searchText"
+                                    total-items="clusterList.totalElements">
+                                    <td>{{(pageSize * pageNumber)+$index+1}}</td>
+                                    <td>{{cluster.clustername}}</td>
+                                    <td>{{cluster.projectid}}</td>
+                                    <td>{{cluster.region}}</td>
+                                    <td>{{cluster.createdDate | date : "hh:mm a ,dd MMM yyyy"}}</td>
+                                    <td>{{cluster.createdBy}}</td>
+
+                                    <td>
+                                        <button type="button" ng-click="setFlags(true,false);edit(cluster.id,true)"
+                                                class="btn btn-default"
+                                                title="Edit">
+                                            <span class="glyphicon glyphicon-pencil"></span> Edit
+                                        </button>
+                                        <!--<button type="button" ng-show="environment.status==STATUS_CONSTANTS.failed" ng-click="setFlags(false,true);edit(environment.id,false)" class="btn btn-default"-->
+                                        <!--title="Retry">-->
+                                        <!--<span class="fa fa-undo"></span> Retry-->
+                                        <!--</button>-->
+                                        <!--<button type="button" ng-show="environment.status=='update-failed'" ng-click="setFlags(true,false);edit(environment.id,false)" class="btn btn-default"-->
+                                        <!--title="Retry">-->
+                                        <!--<span class="fa fa-undo"></span> Retry Update-->
+                                        <!--</button>-->
+                                        <!--<button type="button" ng-click="deleteCluster(cluster.id)"-->
+                                                <!--class="btn btn-default"-->
+                                                <!--title="Delete">-->
+                                            <!--<span class="fa fa-trash"></span> Delete-->
+                                        <!--</button>-->
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"
+                                                         template-url="scripts/core/views/dirPagination.tpl.html">
+
+                                </dir-pagination-controls>
+                            </div>
+                            <div class="col-sm-3 " ng-show="environmentList.totalPages>0">
+                                <strong>Showing {{(pageSize * pageNumber)+$index+1}} - {{(pageSize *
+                                    pageNumber)+$index+records}}
+                                    of {{totalRecords}} records</strong>
+                            </div>
+                            <div class="col-sm-4 text-right " ng-show="environmentList.totalPages>0">
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <label for="page-size-input1" class="control-label ">Records per page </label>
+                                        <select id="page-size-input1" name="pageSize" ng-model="pageSize"
+                                                ng-change="setPageSize(pageSize)"
+                                                class="form-control ">
+                                            <option ng-selected="pageSize==10" value="10">10</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                            <option value="250">250</option>
+                                            <option value="500">500</option>
+                                            <option value="1000">1000</option>
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+<div class="modal fade" id="saveClusterModal" tabindex="-1" role="dialog" aria-labelledby="environmentLabel"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form name="saveClusterModalForm" role="form" novalidate
+                  class="form-horizontal ng-scope ng-invalid ng-invalid-required ng-dirty ng-valid-minlength"
+            >
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                            ng-click="clear()">&times;
+                    </button>
+                    <h4 class="modal-title" id="environmentLabel">Create or edit Cluster</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="col-sm-6">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">Project ID</label>
+                            <div class="">
+                                <input type="text" class="form-control" name="projectid" id="projectid"
+                                       ng-model="cluster.projectid" required ng-minlength=1 ng-maxlength=64
+                                       ng-readonly="readOnly">
+
+                                <div class=""
+                                     ng-show="saveClusterModalForm.projectid.$dirty && saveClusterModalForm.projectid.$invalid">
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveClusterModalForm.projectid.$error.required">
+                                        Project ID is required.
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveClusterModalForm.projectid.$error.minlength">
+                                        Project ID is required to be at least 1 character
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveClusterModalForm.projectid.$error.maxlength">
+                                        Project ID cannot be longer than 64 characters
+                                    </small>
+                                </div>
+                                <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                       ng-if="specialCharError">
+                                    Project ID cannot contain special characters
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">Cluster Name</label>
+                            <div class="">
+                                <input type="text" class="form-control" name="clustername" id="clustername"
+                                       ng-model="cluster.clustername" required ng-minlength=1 ng-maxlength=64
+                                       ng-readonly="readOnly">
+
+                                <div class=""
+                                     ng-show="saveClusterModalForm.clustername.$dirty && saveClusterModalForm.clustername.$invalid">
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveClusterModalForm.clustername.$error.required">
+                                        Cluster Name is required.
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveClusterModalForm.clustername.$error.minlength">
+                                        Cluster Name is required to be at least 1 character
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveClusterModalForm.clustername.$error.maxlength">
+                                        Cluster Name cannot be longer than 64 characters
+                                    </small>
+                                </div>
+                                <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                       ng-if="specialCharError">
+                                    Cluster Name cannot contain special characters
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">Region:</label>
+                            <div class="">
+                                <select class="form-control" name="repeatSelect" id="repeatSelect"
+                                        ng-model="cluster.region" ng-change="getRegions();" required>
+                                    <option ng-repeat="(key, value) in regionMap" value="{{key}}">{{value}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-6">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">Cluster Description</label>
+                            <div class="">
+                                <input type="text" class="form-control" name="clusterDescription"
+                                       ng-model="cluster.clusterDescription" ng-minlength=1 ng-maxlength=256 required>
+
+                                <div class=""
+                                     ng-show="saveClusterModalForm.clusterDescription.$dirty && saveClusterModalForm.clusterDescription.$invalid">
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveClusterModalForm.clusterDescription.$error.required">
+                                        Cluster Description is required.
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveClusterModalForm.clusterDescription.$error.minlength">
+                                        Cluster Description is required to be at least 1 character
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveClusterModalForm.clusterDescription.$error.maxlength">
+                                        Cluster Description cannot be longer than 256 characters
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">Domain name</label>
+                            <div class="">
+                                <input type="text" class="form-control" name="domainName"
+                                       ng-model="cluster.domainName" ng-minlength=1 ng-maxlength=256 required>
+
+                                <div class=""
+                                     ng-show="saveClusterModalForm.domainName.$dirty && saveClusterModalForm.domainName.$invalid">
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveClusterModalForm.domainName.$error.required">
+                                        Domain Name is required.
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveClusterModalForm.domainName.$error.minlength">
+                                        Domain Name is required to be at least 1 character
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="saveClusterModalForm.domainName.$error.maxlength">
+                                        Domain Name cannot be longer than 256 characters
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">TLS Certificate</label>
+                            <div class="">
+                                    <input type="file" class="form-control" name="tlsCert" id="tlsCert" ng-model="cluster.tlsCert"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">TLS Key</label>
+                            <div class="">
+                                    <input type="file" class="form-control" name="tlsKey" id="tlsKey" ng-model="cluster.tlsKey"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clearConnector()">
+                            <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                        </button>
+                        <button type="submit" ng-disabled="saveClusterModalForm.$invalid" class="btn btn-primary"
+                                ng-click="createCluster()">
+                            <span class="glyphicon glyphicon-save"></span> Save
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

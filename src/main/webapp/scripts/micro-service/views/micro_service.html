@@ -1,0 +1,153 @@
+
+<!-- Main content -->
+<div>
+    <div class="row mt15 pb15">
+        <section class="sidebar">
+            <div class="btn-container" >
+                <button class="btn btn-primary btn-block"  data-toggle="modal" data-target="#registerMicroServiceModal">
+                    Add MicroService
+                </button>
+            </div>
+
+            <div class="sidenav">
+                <ul ng-if="!noMicroServices">
+                    <div class="btn-container">
+                    <input class="form-control mr15" type='text' ng-model='searchText' placeholder="Search" />
+                    </div>
+                    <li ng-repeat="microService in microServiceList | orderBy:'name' | filter:searchText" > <a ui-sref="microService.environment({microServiceId: microService.id,microServiceCode: microService.code})" ui-sref-active="active" >{{microService.name}} ({{microService.code}})
+                        <i class="fa fa-info-circle pull-right" data-container="body" data-toggle="tooltip" data-placement="right" title="Git url : {{microService.gitUrl}}" aria-describedby="popover646960"></i>
+                    </a></li>
+                </ul>
+                <ul ng-if="noMicroServices">
+                    <li><a >No MicroServices!</a></li>
+                </ul>
+            </div>
+        </section>
+        <section class="wrapper">
+            <div class="col-sm-12">
+                <div class="" ui-view=""></div>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="registerMicroServiceModal" tabindex="-1" role="dialog" aria-labelledby="registerMicroService"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false" >
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form name="registerMicroServiceModalForm" role="form" novalidate
+                  class="form-horizontal ng-scope ng-invalid ng-invalid-required ng-dirty ng-valid-minlength"
+            >
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                            ng-click="clear()">&times;</button>
+                    <h4 class="modal-title" id="microServiceCreateLabel">Create or edit MicroService</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="col-sm-6">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">MicroService Name</label>
+                            <div class="">
+                                <input type="text" class="form-control" name="microServiceName"
+                                       ng-model="microService.name" ng-minlength=1 ng-maxlength=512 required >
+
+                                <div class=""
+                                     ng-show="registerMicroServiceModalForm.microServiceName.$dirty && registerMicroServiceModalForm.microServiceName.$invalid">
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;" ng-show="registerMicroServiceModalForm.microServiceName.$error.required">
+                                        MicroService Name is required.
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;" ng-show="registerMicroServiceModalForm.microServiceName.$error.minlength">
+                                        MicroService Name is required to be at least 1 character
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;" ng-show="registerMicroServiceModalForm.microServiceName.$error.maxlength">
+                                        MicroService Name cannot be longer than 512 characters
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">Code</label>
+                            <div class="">
+                                <input type="text" class="form-control" name="microServiceCode" id="microServiceCode"
+                                       ng-model="microService.code" required ng-minlength=1 ng-maxlength=8 ng-readonly="readOnly">
+
+                                <div class=""
+                                     ng-show="registerMicroServiceModalForm.microServiceCode.$dirty && registerMicroServiceModalForm.microServiceCode.$invalid">
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;" ng-show="registerMicroServiceModalForm.microServiceCode.$error.required">
+                                        MicroService Code is required.
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;" ng-show="registerMicroServiceModalForm.microServiceCode.$error.minlength">
+                                        MicroService Code is required to be at least 1 character
+                                    </small>
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;" ng-show="registerMicroServiceModalForm.microServiceCode.$error.maxlength">
+                                        MicroService Code cannot be longer than 8 characters
+                                    </small>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+
+
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">GitHub Url</label>
+                            <div class="">
+
+                                <input type="text" class="form-control" name="microServiceUrl" id="microServiceUrl"
+                                       ng-model="microService.gitUrl"  >
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group" style="padding: 0px 10px 0px 10px;">
+                            <label class="control-label">Register with CI/CD?</label>
+
+                            <div class="">
+
+                                <label class="radio-inline">
+                                    <input  name="registerWithCICD"  ng-model="microService.register" ng-value="true" checked="" type="radio" required>
+                                    YES
+                                </label>
+                                <label class="radio-inline">
+                                    <input  name="registerWithCICD"  ng-model="microService.register" ng-value="false" required type="radio">
+                                    NO
+                                </label>
+                                <div class=""
+                                     ng-show="registerMicroServiceModalForm.registerWithCICD.$dirty && registerMicroServiceModalForm.registerWithCICD.$invalid">
+                                    <small class="alert alert-danger" style="position: absolute;z-index: 999;"
+                                           ng-show="registerMicroServiceModalForm.registerWithCICD.$error.required">
+                                        This is required.
+                                    </small>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="clearfix"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clearMicroService()">
+                            <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                        </button>
+                        <button type="submit" ng-disabled="registerMicroServiceModalForm.$invalid" class="btn btn-primary" ng-click="createMicroService()">
+                            <span class="glyphicon glyphicon-save"></span> Save
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
