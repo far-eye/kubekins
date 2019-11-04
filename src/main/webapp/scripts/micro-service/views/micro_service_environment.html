@@ -319,7 +319,7 @@
                             <label class="control-label">Target Instances:</label>
                             <div class="">
                                 <input type="number" class="form-control" name="targetPods"
-                                       ng-model="environment.targetPods" required ng-min="1" ng-max="5">
+                                       ng-model="environment.targetPods" required ng-min="1" ng-max="20">
 
                                 <div class=""
                                      ng-show="saveEnvironmentModalForm.targetPods.$dirty && saveEnvironmentModalForm.targetPods.$invalid">
@@ -361,7 +361,7 @@
                             <label class="control-label">Maximum Instances:</label>
                             <div class="">
                                 <input type="number" class="form-control" name="maximumPods"
-                                       ng-model="environment.maximumPods" required ng-min="1" ng-max="5">
+                                       ng-model="environment.maximumPods" required ng-min="1" ng-max="20">
 
                                 <div class=""
                                      ng-show="saveEnvironmentModalForm.maximumPods.$dirty && saveEnvironmentModalForm.maximumPods.$invalid">

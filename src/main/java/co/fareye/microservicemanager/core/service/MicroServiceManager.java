@@ -22,7 +22,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import io.fabric8.kubernetes.api.model.*;
-import io.fabric8.kubernetes.api.model.extensions.Deployment;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.extensions.Ingress;
 import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.*;
@@ -39,7 +39,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import javax.inject.Inject;
@@ -323,7 +322,7 @@ public class MicroServiceManager {
         final CountDownLatch closeLatch = new CountDownLatch(1);
 
 
-        try (Watch watch = client.extensions().deployments().inNamespace(namespace).watch(new Watcher<Deployment>() {
+        try (Watch watch = client.apps().deployments().inNamespace(namespace).watch(new Watcher<Deployment>() {
             @Override
             public void eventReceived(Action action, Deployment resource) {
                 logger.info("namespace : " + namespace+" --> "+"{} : {} : {}", action, resource.getMetadata().getName(),Constants.microServiceName);
@@ -395,7 +394,7 @@ public class MicroServiceManager {
             applyAffinity(microServiceEnvironment,deployment);
 
 
-            client.extensions().deployments().create(deployment);
+            client.apps().deployments().create(deployment);
 
 
             Integer time = 60*microServiceEnvironment.getTargetPods();
@@ -406,7 +405,7 @@ public class MicroServiceManager {
             if(microServiceEnvironment.getAutoscale()){
                 createHpa(microServiceEnvironment,namespace,client,Constants.microServiceName,Constants.microServiceHpa);
             }else if(!microServiceEnvironment.getTargetPods().equals(1)) {
-                client.extensions().deployments().inNamespace(namespace).withName(Constants.microServiceName).scale(microServiceEnvironment.getTargetPods(), true);
+                client.apps().deployments().inNamespace(namespace).withName(Constants.microServiceName).scale(microServiceEnvironment.getTargetPods(), true);
             }
 
 
@@ -691,12 +690,12 @@ public class MicroServiceManager {
                             microServiceDeployment.getSpec().setReplicas(2);
                         }
 
-                        client.extensions().deployments().inNamespace(namespace).withName(microServiceDeployment.getMetadata().getName()).replace(microServiceDeployment);
+                        client.apps().deployments().inNamespace(namespace).withName(microServiceDeployment.getMetadata().getName()).replace(microServiceDeployment);
 
                     }
                     Thread.sleep(10000);
 
-                    try (Watch watch = client.extensions().deployments().inNamespace(namespace).watch(new Watcher<Deployment>() {
+                    try (Watch watch = client.apps().deployments().inNamespace(namespace).watch(new Watcher<Deployment>() {
                         Boolean check = false;
 
                         @Override
@@ -761,7 +760,7 @@ public class MicroServiceManager {
                     final CountDownLatch closeLatch = new CountDownLatch(1);
                     Thread.sleep(2000);
 
-                    try (Watch watch = client.extensions().deployments().inNamespace(namespace).watch(new Watcher<Deployment>() {
+                    try (Watch watch = client.apps().deployments().inNamespace(namespace).watch(new Watcher<Deployment>() {
                         Boolean check = false;
 
                         @Override
@@ -813,12 +812,12 @@ public class MicroServiceManager {
                 } else if (microServiceEnvironmentOld.getAutoscale() && !microServiceEnvironmentNew.getAutoscale()) {
 
                     client.autoscaling().horizontalPodAutoscalers().inNamespace(namespace).withName(Constants.microServiceHpa).delete();
-                    client.extensions().deployments().inNamespace(namespace).withName(Constants.microServiceName).scale(microServiceEnvironmentNew.getTargetPods(), true);
+                    client.apps().deployments().inNamespace(namespace).withName(Constants.microServiceName).scale(microServiceEnvironmentNew.getTargetPods(), true);
 
                 } else if (!microServiceEnvironmentOld.getAutoscale() && !microServiceEnvironmentNew.getAutoscale()) {
 
                     if (!microServiceEnvironmentNew.getTargetPods().equals(microServiceEnvironmentOld.getTargetPods())) {
-                        client.extensions().deployments().inNamespace(namespace).withName(Constants.microServiceName).scale(microServiceEnvironmentNew.getTargetPods(), true);
+                        client.apps().deployments().inNamespace(namespace).withName(Constants.microServiceName).scale(microServiceEnvironmentNew.getTargetPods(), true);
                     }
                 }
                 microServiceEnvironmentNew.setStatus(Constants.success);

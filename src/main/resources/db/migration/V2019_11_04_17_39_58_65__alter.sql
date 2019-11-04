@@ -1,0 +1,6 @@
+
+ALTER TABLE micro_service_environment
+DROP CONSTRAINT micro_service_environment_code_key;
+
+ALTER TABLE micro_service_environment
+ADD CONSTRAINT micro_service_environment_code_cluster_id_key UNIQUE (code, cluster_id);
