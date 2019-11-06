@@ -23,3 +23,43 @@ Add environment to create deployment in kubernetes.
 Cluster manager to register the kubernetes cluster. Currently only gcp cluster is supported.
 
 
+
+Installation instruction 
+
+Project will run on linux operation system having bash shell.
+It should also have kubectl, helm , awsctl , gcloud installed.
+
+Database used is postgres and also required s3 where configuration files should be uploaded.
+
+To run project, do the following:
+1.clone project
+2.then run mvn clean package to generate jar file of the project
+3.run the java jar with below environment variables
+
+Environment variables
+MAX_DB_CONNECTION_POOL_SIZE
+PG_PASSWORD
+PG_USER
+DB_NAME
+DB_SERVER
+S3_REGION
+S3_SECRET_KEY
+S3_ACCESS_KEY
+ENVIRONMENT
+SERVER_NAME
+PROXY_PORT
+PORT=8082
+HOME_PATH
+CODESHIP_PASSWORD
+CODESHIP_USERNAME
+NEW_RELIC_LICENCE_KEY
+S3_CLUSTER_BUCKET
+MICROSERVICE_CLUSTER_NAME
+MICROSERVICE_REGION
+MICROSERVICE_PROEJECT_ID
+MICROSERVICE_YAML_FOLDER_PATH
+MICROSERVICE_PATH_TO_TLS_CERT
+MICROSERVICE_PATH_TO_TLS_KEY
+MICROSERVICE_DOMAIN_NAME
+MICROSERVICE_PROJECT_ID
+S3_MICROSERVICE_BUCKET
