@@ -11,7 +11,7 @@ Add environment to create deployment in kubernetes. This environment can then be
 Cluster manager is used to register the kubernetes cluster. Currently only gcp cluster is supported.
 SSL certificate and key is also required , so that domain can be registered. 
 
-#Build details
+# Build details
 
 If Codeship is used then add these folders in your repository.
 
