@@ -42,7 +42,7 @@ You can also create your own build similar to above.
 ![Add Micro-service](create_micro_service.png?raw=true "Add Micro-service")
 
 4. Add Environment
-![Add Environment](add env.png?raw=true "Add Environment")
+![Add Environment](add_env.png?raw=true "Add Environment")
 
 
 
