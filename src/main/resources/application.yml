@@ -23,8 +23,6 @@ spring:
       hibernate.cache.use_second_level_cache: false
 
 app:
-  serverName: ${SERVER_NAME}
-  environment: ${ENVIRONMENT}
   s3:
     accessKey: ${S3_ACCESS_KEY}
     secretKey: ${S3_SECRET_KEY}
