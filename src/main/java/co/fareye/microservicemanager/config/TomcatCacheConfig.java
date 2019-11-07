@@ -9,9 +9,6 @@ import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletCon
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-/*
- *   Referred URL : http://stackoverflow.com/questions/39146476/how-does-spring-boot-control-tomcat-cache
- */
 @Component
 public class TomcatCacheConfig {
 

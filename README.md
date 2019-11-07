@@ -1,65 +1,81 @@
-# microservice-manager
-A tool to register microservice(github projects), create different environments like staging , testing , production etc and deploy and manage these in kubernetes.
+# Micro-service Manager 
+A tool to register micro-service(github projects) and then create deploy environments like staging , testing , production etc and manage these inside kubernetes cluster.
+This tool will help in zero downtime deployment of the application when existing environment version is updated. It uses rolling update to change image(versions) of environment to achieve it.
 
-Register a github repository and register build in codeship. You have an option to choose codeship. If use codeship add
-Docker containing Dockerfile and a yaml folder containing items below
-1.Config folder containing all configmaps
-2.microservice containing deployment yaml
-3.ingress folder containing ingress.yaml
-4.service folder containing service to deploy
-5.environment-variables-list-for-user.txt
-6.environment-variables.yaml
-7.hpa.yaml
-8.pdb.yaml
-
-Build details
-Either use codeship or other build tool like jenkins.
-The build tool should make an docker image of whatever you want to deploy image should have a tag.format should be vx.x.x.x eg v1.0.1 , v2.0.1.1 etc
-Right now only asia.gcr is used as registry . The build should push the docker image to this registry.
-
-After registering a project, We can now create multiple environments for the same. Each environment will have a seperate namespace in kubernetes
-Add environment to create deployment in kubernetes.
-
-Cluster manager to register the kubernetes cluster. Currently only gcp cluster is supported.
+Register a micros-service by adding github repository url. You have an option to choose codeship as the default built tool if you have not already registered it.Automatic hooks will be created from github to codeship if codeship user has proper access(Credentials to be provided in application's environment variables). 
 
 
+After registering a micro-service, We can now create multiple environments for the same. Each environment will have a separate namespace in kubernetes
+Add environment to create deployment in kubernetes. This environment can then be update in Zero Downtime to other versions.
 
-Installation instruction 
+Cluster manager is used to register the kubernetes cluster. Currently only gcp cluster is supported.
+SSL certificate and key is also required , so that domain can be registered. 
 
-Project will run on linux operation system having bash shell.
-It should also have kubectl, helm , awsctl , gcloud installed.
+#Build details
 
-Database used is postgres and also required s3 where configuration files should be uploaded.
+If Codeship is used then add these folders in your repository.
 
-To run project, do the following:
-1.clone project
-2.then run mvn clean package to generate jar file of the project
-3.run the java jar with below environment variables
+1. Folder name **Docker** containing Dockerfile 
+2. Folder named **yaml**  containing items below
+    1. Config folder containing all configmaps
+    2. microservice containing deployment yaml
+    3. ingress folder containing ingress.yaml
+    4. service folder containing service to deploy
+    5. environment-variables-list-for-user.txt
+    6. environment-variables.yaml
+    7. hpa.yaml
+    8. pdb.yaml
 
-Environment variables
-MAX_DB_CONNECTION_POOL_SIZE
-PG_PASSWORD
-PG_USER
-DB_NAME
-DB_SERVER
-S3_REGION
-S3_SECRET_KEY
+The build tool will make a docker image of whatever you want to deploy.Image tag format should be vx.x.x.x Eg v1.0.1 , v2.0.1.1 etc.
+Only Google cloud registry is supported. The build will push the docker image to this registry.
+
+You can also create your own build similar to above.
+# Screen Shots
+
+1. Register Cluster
+![Register Cluster](create_cluster.png?raw=true "Register Cluster")
+
+2. Details Of Clusters
+![Details Of Clusters](details_cluster.png?raw=true "Details Of Clusters")
+
+3. Add Micro-service
+![Add Micro-service](create_micro_service.png?raw=true "Add Micro-service")
+
+4. Add Environment
+![Add Environment](add env.png?raw=true "Add Environment")
+
+
+
+#Installation instruction 
+
+Application will run on a linux operation system having bash shell.
+It should also have kubectl, helm , awsctl and gcloud installed locally.
+
+Application uses postgres for database , rabbitmq for queueing and AWS s3 from where kubernetes configuration files will be downloaded.
+So Postgres Database instance , Rabbitmq queue and S3 is required and replace appropriate values in environmnet variables.
+
+To run the project, do the following:
+1. Clone project
+2. Then run mvn clean package to generate jar file of the project
+3. Run the java jar with below environment variables
+
+**Environment variables :**
+```
+MAX_DB_CONNECTION_POOL_SIZE database connection pool size
+PG_PASSWORD database password
+PG_USER database user
+DB_NAME database name
+DB_SERVER database endpoint
+S3_REGION s3 bucket region
+S3_SECRET_KEY 
 S3_ACCESS_KEY
-ENVIRONMENT
-SERVER_NAME
-PROXY_PORT
-PORT=8082
-HOME_PATH
-CODESHIP_PASSWORD
+PORT the port where the application will listen
+HOME_PATH home directory of user where every thing is installed in linux
+CODESHIP_PASSWORD 
 CODESHIP_USERNAME
 NEW_RELIC_LICENCE_KEY
-S3_CLUSTER_BUCKET
-MICROSERVICE_CLUSTER_NAME
-MICROSERVICE_REGION
-MICROSERVICE_PROEJECT_ID
-MICROSERVICE_YAML_FOLDER_PATH
-MICROSERVICE_PATH_TO_TLS_CERT
-MICROSERVICE_PATH_TO_TLS_KEY
-MICROSERVICE_DOMAIN_NAME
-MICROSERVICE_PROJECT_ID
-S3_MICROSERVICE_BUCKET
+S3_CLUSTER_BUCKET s3 bucket name where TLS keys will be stored
+MICROSERVICE_YAML_FOLDER_PATH folder path where application yaml folder will be downloaded
+MICROSERVICE_DOMAIN_NAME domain name from where this application will be accessed.
+S3_MICROSERVICE_BUCKET s3 bucket name where yaml folders are uploaded and will be downloaded from
+```
