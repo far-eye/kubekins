@@ -46,7 +46,7 @@ You can also create your own build similar to above.
 
 
 
-#Installation instruction 
+# Installation instruction 
 
 Application will run on a linux operation system having bash shell.
 It should also have kubectl, helm , awsctl and gcloud installed locally.
