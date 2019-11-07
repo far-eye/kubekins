@@ -30,7 +30,8 @@ The build tool will make a docker image of whatever you want to deploy.Image tag
 Only Google cloud registry is supported. The build will push the docker image to this registry.
 
 You can also create your own build similar to above.
-# Screen Shots
+
+# Screenshots
 
 1. Register Cluster
 ![Register Cluster](create_cluster.png?raw=true "Register Cluster")
@@ -46,7 +47,7 @@ You can also create your own build similar to above.
 
 
 
-# Installation instruction 
+# Installation instructions
 
 Application will run on a linux operation system having bash shell.
 It should also have kubectl, helm , awsctl and gcloud installed locally.
