@@ -1,12 +1,12 @@
-# Micro-service Manager 
-A tool to register micro-service(github projects) and then create deploy environments like staging , testing , production etc and manage these inside kubernetes cluster.
+# Kubekins, Micro-Service Manager for Kubernetes
+
+> A tool to register micro-service(github projects) and then create deploy environments like staging, testing, production etc and manage these inside kubernetes cluster.
+
 This tool will help in zero downtime deployment of the application when existing environment version is updated. It uses rolling update to change image(versions) of environment to achieve it.
 
 Register a micros-service by adding github repository url. You have an option to choose codeship as the default built tool if you have not already registered it.Automatic hooks will be created from github to codeship if codeship user has proper access(Credentials to be provided in application's environment variables). 
 
-
-After registering a micro-service, We can now create multiple environments for the same. Each environment will have a separate namespace in kubernetes
-Add environment to create deployment in kubernetes. This environment can then be update in Zero Downtime to other versions.
+After registering a micro-service, We can now create multiple environments for the same. Each environment will have a separate namespace in kubernetes. Add environment to create deployment in kubernetes. This environment can then be update in Zero Downtime to other versions.
 
 Cluster manager is used to register the kubernetes cluster. Currently only gcp cluster is supported.
 SSL certificate and key is also required , so that domain can be registered. 
@@ -57,7 +57,7 @@ So Postgres Database instance , Rabbitmq queue and S3 is required and replace ap
 
 To run the project, do the following:
 1. Clone project
-2. Then run mvn clean package to generate jar file of the project
+2. Then run `mvn clean package` to generate jar file of the project
 3. Run the java jar with below environment variables
 
 **Environment variables :**
