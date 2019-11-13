@@ -1,5 +1,7 @@
 # Kubekins, Micro-Service Manager for Kubernetes
 
+<p align="center"> <img src="./logo/kubekins-logo-400x400.png" alt="Kubekins logo"/> </p>
+
 > A tool to register micro-service(github projects) and then create deploy environments like staging, testing, production etc and manage these inside kubernetes cluster.
 
 This tool will help in zero downtime deployment of the application when existing environment version is updated. It uses rolling update to change image(versions) of environment to achieve it.
